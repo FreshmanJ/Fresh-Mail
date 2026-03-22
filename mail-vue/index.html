@@ -51,74 +51,119 @@
     opacity: 0;
   }
 
-  .loading-icon {
-    display: inline-flex;
-    align-items: center;
+  /* From Uiverse.io by NlghtM4re */
+  .container {
+    width: 100%;
+    display: flex;
     justify-content: center;
-    font-size: 30px;
+    align-items: center;
   }
 
-  .circular {
-    height: 30px;
-    width: 30px;
-    animation: loading-rotate 1s linear infinite;
+  .tree {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    transform-style: preserve-3d;
+    transform: rotateX(-20deg) rotateY(30deg);
+    animation: treeAnimate 5s linear infinite;
   }
 
-  .loading-path .dot1 {
-    transform: translate(3.75px, 3.75px);
-    fill: #409EFF;
-    animation: custom-spin-move 1s infinite linear alternate;
-    opacity: 0.3;
-  }
+  @keyframes treeAnimate {
+    0% {
+      transform: rotateX(-20deg) rotateY(360deg);
+    }
 
-  .loading-path .dot2 {
-    transform: translate(calc(100% - 3.75px), 3.75px);
-    fill: #409EFF;
-    animation: custom-spin-move 1s infinite linear alternate;
-    opacity: 0.3;
-    animation-delay: 0.4s;
-  }
-
-  .loading-path .dot3 {
-    transform: translate(3.75px, calc(100% - 3.75px));
-    fill: #409EFF;
-    animation: custom-spin-move 1s infinite linear alternate;
-    opacity: 0.3;
-    animation-delay: 1.2s;
-  }
-
-  .loading-path .dot4 {
-    transform: translate(calc(100% - 3.75px), calc(100% - 3.75px));
-    fill: #409EFF;
-    animation: custom-spin-move 1s infinite linear alternate;
-    opacity: 0.3;
-    animation-delay: 0.8s;
-  }
-
-  @keyframes loading-rotate {
-    to {
-      transform: rotate(360deg);
+    100% {
+      transform: rotateX(-20deg) rotateY(0deg);
     }
   }
 
-  @keyframes custom-spin-move {
-    to {
-      opacity: 1;
-    }
+  .tree div {
+    position: absolute;
+    top: -50px;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transform: translateY(calc(25px * var(--x))) translateZ(0px);
+  }
+
+  .tree div.branch span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #69c069, #77dd77);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    border-bottom: 5px solid #00000019;
+    transform-origin: bottom;
+    transform: rotateY(calc(90deg * var(--i))) rotateX(30deg) translateZ(28.5px);
+  }
+
+  .tree div.stem span {
+    position: absolute;
+    top: 110px;
+    /* updated top value */
+    left: calc(50% - 7.5px);
+    width: 15px;
+    height: 50%;
+    background: linear-gradient(90deg, #bb4622, #df7214);
+    border-bottom: 5px solid #00000019;
+    transform-origin: bottom;
+    transform: rotateY(calc(90deg * var(--i))) translateZ(7.5px);
+  }
+
+  .shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    filter: blur(20px);
+    transform-style: preserve-3d;
+    transform: rotateX(90deg) translateZ(-65px);
   }
 </style>
 
 <body>
   <div id="loading-first">
-    <div class="loading-icon">
-      <svg class="circular" viewBox="0 0 20 20">
-        <g class="loading-path">
-          <circle r="3.375" class="dot1" rx="0" ry="0" />
-          <circle r="3.375" class="dot2" rx="0" ry="0" />
-          <circle r="3.375" class="dot4" rx="0" ry="0" />
-          <circle r="3.375" class="dot3" rx="0" ry="0" />
-        </g>
-      </svg>
+    <!-- From Uiverse.io by NlghtM4re -->
+    <div class="container">
+      <div class="tree">
+        <div class="branch" style="--x:0">
+          <span style="--i:0;"></span>
+          <span style="--i:1;"></span>
+          <span style="--i:2;"></span>
+          <span style="--i:3;"></span>
+        </div>
+        <div class="branch" style="--x:1">
+          <span style="--i:0;"></span>
+          <span style="--i:1;"></span>
+          <span style="--i:2;"></span>
+          <span style="--i:3;"></span>
+        </div>
+        <div class="branch" style="--x:2">
+          <span style="--i:0;"></span>
+          <span style="--i:1;"></span>
+          <span style="--i:2;"></span>
+          <span style="--i:3;"></span>
+        </div>
+        <div class="branch" style="--x:3">
+          <span style="--i:0;"></span>
+          <span style="--i:1;"></span>
+          <span style="--i:2;"></span>
+          <span style="--i:3;"></span>
+        </div>
+        <div class="stem">
+          <span style="--i:0;"></span>
+          <span style="--i:1;"></span>
+          <span style="--i:2;"></span>
+          <span style="--i:3;"></span>
+        </div>
+        <span class="shadow"></span>
+      </div>
     </div>
   </div>
   <div id="app"></div>

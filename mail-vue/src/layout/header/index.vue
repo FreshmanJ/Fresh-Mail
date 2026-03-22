@@ -6,25 +6,38 @@
     </div>
     <div v-perm="'email:send'" class="writer-box" @click="openSend">
       <div class="writer">
-        <Icon icon="material-symbols:edit-outline-sharp" width="22" height="22"/>
+        <Icon icon="material-symbols:edit-outline-sharp" width="22" height="22" />
       </div>
     </div>
     <div class="toolbar">
       <div v-if="uiStore.dark" class="sun-icon icon-item" @click="openDark($event)">
-        <Icon icon="mingcute:sun-fill"/>
+        <Icon icon="mingcute:sun-fill" />
       </div>
       <div v-else class="dark-icon icon-item" @click="openDark($event)">
-        <Icon icon="solar:moon-linear"/>
+        <Icon icon="solar:moon-linear" />
       </div>
-      <div class="notice icon-item" @click="openNotice">
+
+      <el-dropdown trigger="click" @command="changeLang">
+        <div class="lang-icon icon-item">
+          <Icon icon="ion:language-outline" width="20" height="20" />
+        </div>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="zh-cn">简体中文</el-dropdown-item>
+            <el-dropdown-item command="en">English</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+      <!-- <div class="notice icon-item" @click="openNotice">
         <Icon icon="streamline-plump:announcement-megaphone"/>
-      </div>
-      <el-dropdown ref="userinfoRef" @visible-change="e => userInfoShow = e" :teleported="false" popper-class="detail-dropdown">
-        <div class="avatar" @click="userInfoHide" >
+      </div> -->
+      <el-dropdown ref="userinfoRef" @visible-change="e => userInfoShow = e" :teleported="false"
+        popper-class="detail-dropdown">
+        <div class="avatar" @click="userInfoHide">
           <div class="avatar-text">
             <div>{{ formatName(userStore.user.email) }}</div>
           </div>
-          <Icon class="setting-icon" icon="mingcute:down-small-fill" width="24" height="24"/>
+          <Icon class="setting-icon" icon="mingcute:down-small-fill" width="24" height="24" />
         </div>
         <template #dropdown>
           <div class="user-details">
@@ -55,8 +68,8 @@
                   <el-tag v-if="settingStore.settings.manyEmail || settingStore.settings.addEmail">
                     {{ $t('disabled') }}
                   </el-tag>
-                  <span v-else-if="accountCount && hasPerm('account:add')"
-                        style="margin-right: 5px">{{ $t('totalUserAccount', {msg: accountCount}) }}</span>
+                  <span v-else-if="accountCount && hasPerm('account:add')" style="margin-right: 5px">{{
+                    $t('totalUserAccount', { msg: accountCount}) }}</span>
                   <el-tag v-else-if="!accountCount && hasPerm('account:add')">{{ $t('unlimited') }}</el-tag>
                   <el-tag v-else-if="!hasPerm('account:add')">{{ $t('unauthorized') }}</el-tag>
                 </div>
@@ -75,18 +88,18 @@
 <script setup>
 import router from "@/router";
 import hanburger from '@/components/hamburger/index.vue'
-import {logout} from "@/request/login.js";
-import {Icon} from "@iconify/vue";
-import {useUiStore} from "@/store/ui.js";
-import {useUserStore} from "@/store/user.js";
-import {useRoute} from "vue-router";
-import {computed, ref} from "vue";
-import {useSettingStore} from "@/store/setting.js";
-import {hasPerm} from "@/perm/perm.js"
-import {useI18n} from "vue-i18n";
-import {setExtend} from "@/utils/day.js"
+import { logout } from "@/request/login.js";
+import { Icon } from "@iconify/vue";
+import { useUiStore } from "@/store/ui.js";
+import { useUserStore } from "@/store/user.js";
+import { useRoute } from "vue-router";
+import { computed, ref } from "vue";
+import { useSettingStore } from "@/store/setting.js";
+import { hasPerm } from "@/perm/perm.js"
+import { useI18n } from "vue-i18n";
+import { setExtend } from "@/utils/day.js"
 
-const {t} = useI18n();
+const { t } = useI18n();
 const route = useRoute();
 const settingStore = useSettingStore();
 const userStore = useUserStore();
@@ -157,11 +170,11 @@ const sendCount = computed(() => {
 })
 
 function userInfoHide(e) {
-    if (userInfoShow.value) {
-        userinfoRef.value.handleClose()
-    } else {
-        userinfoRef.value.handleOpen()
-    }
+  if (userInfoShow.value) {
+    userinfoRef.value.handleClose()
+  } else {
+    userinfoRef.value.handleOpen()
+  }
 }
 
 async function copyEmail(email) {
@@ -227,7 +240,7 @@ function openDark(e) {
 function switchDark(nextIsDark, root) {
   root.setAttribute('class', nextIsDark ? 'dark' : '')
   const metaTag = document.getElementById('theme-color-meta');
-  const isMobile =  !window.matchMedia("(pointer: fine) and (hover: hover)").matches;
+  const isMobile = !window.matchMedia("(pointer: fine) and (hover: hover)").matches;
   metaTag.setAttribute('content', nextIsDark ? (isMobile ? '#141414' : '#000000') : (isMobile ? '#FFFFFF' : '#F1F1F1'));
   uiStore.dark = nextIsDark
 }
@@ -261,7 +274,6 @@ function formatName(email) {
 }
 </style>
 <style lang="scss" scoped>
-
 :deep(.el-popper.is-pure) {
   border-radius: 6px;
 }
@@ -295,18 +307,18 @@ function formatName(email) {
     grid-template-columns: auto auto;
     margin-top: 10px;
 
-    > div:first-child {
+    >div:first-child {
       display: grid;
       align-items: center;
       gap: 10px;
     }
 
-    > div:last-child {
+    >div:last-child {
       display: grid;
       gap: 10px;
       text-align: center;
 
-      > div {
+      >div {
         display: flex;
         align-items: center;
       }
@@ -389,7 +401,8 @@ function formatName(email) {
     .writer-text {
       margin-left: 15px;
       font-size: 14px;
-      font-weight: bold;;
+      font-weight: bold;
+      ;
     }
   }
 }
@@ -414,6 +427,7 @@ function formatName(email) {
   display: flex;
   justify-content: end;
   gap: 15px;
+
   @media (max-width: 767px) {
     gap: 10px;
   }
