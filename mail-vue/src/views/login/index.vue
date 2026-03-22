@@ -600,14 +600,13 @@ function submitRegister() {
     margin-top: 5px;
     margin-bottom: 18px;
     color: var(--form-desc-color);
-    width: calc(100% - 130px);
+    padding-left: 80px;
   }
 
   .form-title {
     font-weight: bold;
     font-size: 22px !important;
-    width: calc(100% - 130px);
-    ;
+    padding-left: 80px;
   }
 
   .form-logo {
