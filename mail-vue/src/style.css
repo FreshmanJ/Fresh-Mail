@@ -115,12 +115,13 @@ textarea {
 }
 
 :root {
-    --el-color-primary: #42b883;
-    --el-color-primary-dark-2: #359369;
+    --el-color-primary: #47886b;
+    --el-color-primary-dark-2: #2c7554;
     --el-color-primary-light-3: #7bcda8;
     --el-color-primary-light-5: #a1dcc1;
     --el-color-primary-light-7: #c6eada;
     --el-color-primary-light-9: #ecf8f3;
+    --el-bg-color: rgb(243, 255, 244);
 
     --extra-light-fill: #FAFCFF;
     --light-ill: #F5F7FA;
@@ -168,7 +169,7 @@ textarea {
     --email-hover-background: #1D1E1F;
     --login-border: none;
     --form-desc-color: #8D9095;
-    --login-switch-color: rgb(102, 177, 255);
+    --login-switch-color: #47886b;
     --scrollbar-track-color: #8D9095;
     --base-border-color: #4C4D4F;
     --secondary-text-color: #A3A6AD;

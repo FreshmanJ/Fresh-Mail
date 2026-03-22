@@ -1,146 +1,123 @@
 <template>
-  <div id="login-box" :style=" background ? 'background: var(--el-bg-color)' : ''" v-loading="oauthLoading" element-loading-text="登录中...">
-    <div id="background-wrap" v-if="!settingStore.settings.background">
+  <div id="login-box" :style="background ? 'background: var(--el-bg-color)' : ''" v-loading="oauthLoading"
+    element-loading-text="登录中...">
+    <!-- <div id="background-wrap" v-if="!settingStore.settings.background">
       <div class="x1 cloud"></div>
       <div class="x2 cloud"></div>
       <div class="x3 cloud"></div>
       <div class="x4 cloud"></div>
       <div class="x5 cloud"></div>
+    </div> -->
+    <div class="liquid-bg">
+      <LiquidEther style="height: 100%;" :colors="['#e3eedd', '#deeedd', '#dfece1']" :mouseForce="40" :cursorSize="35"
+        :isViscous="false" :viscous="30" :iterationsViscous="32" :iterationsPoisson="32" :resolution="0.5"
+        :isBounce="false" :auto-demo="false" :dt="0.01" :b-f-e-c-c="true" />
+
     </div>
-    <div v-else :style="background"></div>
     <div class="form-wrapper">
+
+      <!-- <GlassSurface class="container" :width="'100%'" :height="'100%'" :border-radius="24">
+        
+      </GlassSurface> -->
       <div class="container">
+        <img src="../../../public/mail.png" alt="" class="form-logo">
         <span class="form-title">{{ settingStore.settings.title }}</span>
         <span class="form-desc" v-if="show === 'login'">{{ $t('loginTitle') }}</span>
         <span class="form-desc" v-else>{{ $t('regTitle') }}</span>
         <div v-show="show === 'login'">
           <el-input :class="settingStore.settings.loginDomain === 0 ? 'email-input' : ''" v-model="form.email"
-                    type="text" :placeholder="$t('emailAccount')" autocomplete="off">
+            type="text" :placeholder="$t('emailAccount')" autocomplete="off">
             <template #append v-if="settingStore.settings.loginDomain === 0">
               <div @click.stop="openSelect">
-                <el-select
-                    v-if="show === 'login'"
-                    ref="mySelect"
-                    v-model="suffix"
-                    :placeholder="$t('select')"
-                    class="select"
-                >
-                  <el-option
-                      v-for="item in domainList"
-                      :key="item"
-                      :label="item"
-                      :value="item"
-                  />
+                <el-select v-if="show === 'login'" ref="mySelect" v-model="suffix" :placeholder="$t('select')"
+                  class="select">
+                  <el-option v-for="item in domainList" :key="item" :label="item" :value="item" />
                 </el-select>
                 <div style="color: var(--el-text-color-primary)">
                   <span>{{ suffix }}</span>
-                  <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20"/>
+                  <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20" />
                 </div>
               </div>
             </template>
           </el-input>
           <el-input v-model="form.password" :placeholder="$t('password')" type="password" autocomplete="off">
           </el-input>
-          <el-button class="btn" type="primary" @click="submit" :loading="loginLoading"
-          >{{ $t('loginBtn') }}
+          <el-button class="btn" type="primary" @click="submit" :loading="loginLoading">{{ $t('loginBtn') }}
           </el-button>
-          <el-button class="btn" v-if="settingStore.settings.linuxdoSwitch"  style="margin-top: 10px"  @click="linuxDoLogin">
+          <el-button class="btn" v-if="settingStore.settings.linuxdoSwitch" style="margin-top: 10px"
+            @click="linuxDoLogin">
             <el-avatar src="/image/linuxdo.webp" :size="18" style="margin-right: 10px" />LinuxDo
           </el-button>
         </div>
         <div v-show="show !== 'login'">
           <el-input class="email-input" v-model="registerForm.email" type="text" :placeholder="$t('emailAccount')"
-                    autocomplete="off">
+            autocomplete="off">
             <template #append>
               <div @click.stop="openSelect">
-                <el-select
-                    v-if="show !== 'login'"
-                    ref="mySelect"
-                    v-model="suffix"
-                    :placeholder="$t('select')"
-                    class="select"
-                >
-                  <el-option
-                      v-for="item in domainList"
-                      :key="item"
-                      :label="item"
-                      :value="item"
-                  />
+                <el-select v-if="show !== 'login'" ref="mySelect" v-model="suffix" :placeholder="$t('select')"
+                  class="select">
+                  <el-option v-for="item in domainList" :key="item" :label="item" :value="item" />
                 </el-select>
                 <div>
                   <span>{{ suffix }}</span>
-                  <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20"/>
+                  <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20" />
                 </div>
               </div>
             </template>
           </el-input>
-          <el-input v-model="registerForm.password" :placeholder="$t('password')" type="password" autocomplete="off"/>
+          <el-input v-model="registerForm.password" :placeholder="$t('password')" type="password" autocomplete="off" />
           <el-input v-model="registerForm.confirmPassword" :placeholder="$t('confirmPwd')" type="password"
-                    autocomplete="off"/>
+            autocomplete="off" />
           <el-input v-if="settingStore.settings.regKey === 0" v-model="registerForm.code" :placeholder="$t('regKey')"
-                    type="text" autocomplete="off"/>
+            type="text" autocomplete="off" />
           <el-input v-if="settingStore.settings.regKey === 2" v-model="registerForm.code"
-                    :placeholder="$t('regKeyOptional')" type="text" autocomplete="off"/>
-          <div v-show="verifyShow"
-               class="register-turnstile"
-               :data-sitekey="settingStore.settings.siteKey"
-               data-callback="onTurnstileSuccess"
-               data-error-callback="onTurnstileError"
-               data-after-interactive-callback="loadAfter"
-               data-before-interactive-callback="loadBefore"
-          >
+            :placeholder="$t('regKeyOptional')" type="text" autocomplete="off" />
+          <div v-show="verifyShow" class="register-turnstile" :data-sitekey="settingStore.settings.siteKey"
+            data-callback="onTurnstileSuccess" data-error-callback="onTurnstileError"
+            data-after-interactive-callback="loadAfter" data-before-interactive-callback="loadBefore">
             <span style="font-size: 12px;color: #F56C6C" v-if="botJsError">{{ $t('verifyModuleFailed') }}</span>
           </div>
-          <el-button class="btn" style="margin: 0" type="primary" @click="submitRegister" :loading="registerLoading"
-          >{{ $t('regBtn') }}
+          <el-button class="btn" style="margin: 0" type="primary" @click="submitRegister" :loading="registerLoading">{{
+            $t('regBtn') }}
           </el-button>
-          <el-button v-if="settingStore.settings.linuxdoSwitch" class="btn" style="margin-top: 10px"  @click="linuxDoLogin">
+          <el-button v-if="settingStore.settings.linuxdoSwitch" class="btn" style="margin-top: 10px"
+            @click="linuxDoLogin">
             <el-avatar src="/image/linuxdo.webp" :size="18" style="margin-right: 10px" />LinuxDo
           </el-button>
         </div>
         <template v-if="settingStore.settings.register === 0">
           <div class="switch" @click="show = 'register'" v-if="show === 'login'">{{ $t('noAccount') }}
-            <span>{{ $t('regSwitch') }}</span></div>
+            <span>{{ $t('regSwitch') }}</span>
+          </div>
           <div class="switch" @click="show = 'login'" v-else>{{ $t('hasAccount') }} <span>{{ $t('loginSwitch') }}</span>
           </div>
         </template>
       </div>
     </div>
-    <el-dialog class="bind-dialog" v-model="showBindForm"  title="注册邮箱" >
+    <el-dialog class="bind-dialog" v-model="showBindForm" title="注册邮箱">
       <div class="bind-container">
         <el-input v-model="bindForm.email" type="text" :placeholder="$t('emailAccount')" autocomplete="off">
           <template #append>
             <div @click.stop="openSelect">
-              <el-select
-                  ref="mySelect"
-                  v-model="suffix"
-                  :placeholder="$t('select')"
-                  class="select"
-              >
-                <el-option
-                    v-for="item in domainList"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                />
+              <el-select ref="mySelect" v-model="suffix" :placeholder="$t('select')" class="select">
+                <el-option v-for="item in domainList" :key="item" :label="item" :value="item" />
               </el-select>
               <div>
                 <span>{{ suffix }}</span>
-                <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20"/>
+                <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20" />
               </div>
             </div>
           </template>
         </el-input>
         <el-input v-if="settingStore.settings.regKey === 0" v-model="bindForm.code" :placeholder="$t('regKey')"
-                  type="text" autocomplete="off"/>
-        <el-input v-if="settingStore.settings.regKey === 2" v-model="bindForm.code"
-                  :placeholder="$t('regKeyOptional')" type="text" autocomplete="off"/>
-        <el-button class="btn" type="primary" @click="bind" :loading="bindLoading"
-        >绑定
+          type="text" autocomplete="off" />
+        <el-input v-if="settingStore.settings.regKey === 2" v-model="bindForm.code" :placeholder="$t('regKeyOptional')"
+          type="text" autocomplete="off" />
+        <el-button class="btn" type="primary" @click="bind" :loading="bindLoading">绑定
         </el-button>
       </div>
     </el-dialog>
-    <a v-show="settingStore.settings.projectLink" class="github" href="https://github.com/maillab/cloud-mail">
+    <a v-show="settingStore.settings.projectLink" class="github" href="https://github.com/FreshmanJ/Fresh-Mail">
       <Icon icon="mingcute:github-line" color="#1890ff" width="20" height="20" />
     </a>
   </div>
@@ -148,22 +125,25 @@
 
 <script setup>
 import router from "@/router";
-import {computed, nextTick, reactive, ref} from "vue";
-import {login} from "@/request/login.js";
-import {register} from "@/request/login.js";
-import {isEmail} from "@/utils/verify-utils.js";
-import {useSettingStore} from "@/store/setting.js";
-import {useAccountStore} from "@/store/account.js";
-import {useUserStore} from "@/store/user.js";
-import {useUiStore} from "@/store/ui.js";
-import {Icon} from "@iconify/vue";
-import {cvtR2Url} from "@/utils/convert.js";
-import {loginUserInfo} from "@/request/my.js";
-import {permsToRouter} from "@/perm/perm.js";
-import {useI18n} from "vue-i18n";
-import {oauthBindUser, oauthLinuxDoLogin} from "@/request/ouath.js";
+import { computed, nextTick, reactive, ref } from "vue";
+import { login } from "@/request/login.js";
+import { register } from "@/request/login.js";
+import { isEmail } from "@/utils/verify-utils.js";
+import { useSettingStore } from "@/store/setting.js";
+import { useAccountStore } from "@/store/account.js";
+import { useUserStore } from "@/store/user.js";
+import { useUiStore } from "@/store/ui.js";
+import { Icon } from "@iconify/vue";
+import { cvtR2Url } from "@/utils/convert.js";
+import { loginUserInfo } from "@/request/my.js";
+import { permsToRouter } from "@/perm/perm.js";
+import { useI18n } from "vue-i18n";
+import { oauthBindUser, oauthLinuxDoLogin } from "@/request/ouath.js";
+import LiquidEther from '../../component/LiquidEther/LiquidEther.vue'
+import GlassSurface from "../../component/GlassSurface/GlassSurface.vue";
 
-const {t} = useI18n();
+
+const { t } = useI18n();
 const accountStore = useAccountStore();
 const userStore = useUserStore();
 const uiStore = useUiStore();
@@ -254,7 +234,7 @@ function linuxDoLogin() {
   const clientId = settingStore.settings.linuxdoClientId
   const redirectUri = encodeURIComponent(settingStore.settings.linuxdoCallbackUrl)
   window.location.href =
-      `https://connect.linux.do/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid+profile+email`
+    `https://connect.linux.do/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid+profile+email`
 }
 
 linuxDoGetUser();
@@ -307,7 +287,7 @@ function bind() {
 
   if (bindForm.email.length < settingStore.settings.minEmailPrefix) {
     ElMessage({
-      message: t('minEmailPrefix', {msg: settingStore.settings.minEmailPrefix}),
+      message: t('minEmailPrefix', { msg: settingStore.settings.minEmailPrefix }),
       type: 'error',
       plain: true,
     })
@@ -340,7 +320,7 @@ function bind() {
 
   }
 
-  const form = {email: bindForm.email + suffix.value, oauthUserId: bindForm.oauthUserId, code: bindForm.code}
+  const form = { email: bindForm.email + suffix.value, oauthUserId: bindForm.oauthUserId, code: bindForm.code }
 
   bindLoading.value = true
   oauthBindUser(form).then(data => {
@@ -399,7 +379,7 @@ async function saveToken(token) {
   routers.forEach(routerData => {
     router.addRoute('layout', routerData);
   });
-  await router.replace({name: 'layout'})
+  await router.replace({ name: 'layout' })
   uiStore.showNotice()
   oauthLoading.value = false;
   bindLoading.value = false;
@@ -421,7 +401,7 @@ function submitRegister() {
 
   if (registerForm.email.length < settingStore.settings.minEmailPrefix) {
     ElMessage({
-      message: t('minEmailPrefix', {msg: settingStore.settings.minEmailPrefix}),
+      message: t('minEmailPrefix', { msg: settingStore.settings.minEmailPrefix }),
       type: 'error',
       plain: true,
     })
@@ -513,7 +493,7 @@ function submitRegister() {
     code: registerForm.code
   }
 
-  register(form).then(({regVerifyOpen}) => {
+  register(form).then(({ regVerifyOpen }) => {
     show.value = 'login'
     registerForm.email = ''
     registerForm.password = ''
@@ -564,36 +544,42 @@ function submitRegister() {
 </style>
 
 <style lang="scss" scoped>
-
 .form-wrapper {
   position: fixed;
-  right: 0;
-  height: 100%;
+  right: 50%;
+  top: 50%;
+  transform: translate(50%, -50%);
+
+  height: fit-content;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;
+
   @media (max-width: 767px) {
     width: 100%;
   }
 }
 
 .container {
-  background: v-bind(loginOpacity);
-  padding-left: 40px;
-  padding-right: 40px;
+  background-color: #fff;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   width: 450px;
   height: 100%;
+  border-radius: 24px;
   border-left: 1px solid var(--login-border);
   box-shadow: var(--el-box-shadow-light);
+  opacity: 0.77;
+
   @media (max-width: 1024px) {
     padding: 20px 18px;
     width: 384px;
     margin-left: 18px;
   }
+
   @media (max-width: 767px) {
     border: 1px solid var(--login-border);
     padding: 20px 18px;
@@ -614,11 +600,23 @@ function submitRegister() {
     margin-top: 5px;
     margin-bottom: 18px;
     color: var(--form-desc-color);
+    width: calc(100% - 130px);
   }
 
   .form-title {
     font-weight: bold;
     font-size: 22px !important;
+    width: calc(100% - 130px);
+    ;
+  }
+
+  .form-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    position: fixed;
+    left: 40px;
+    top: 40px;
   }
 
   .switch {
@@ -633,12 +631,12 @@ function submitRegister() {
 
   :deep(.el-input__wrapper) {
     border-radius: 6px;
-    background: var(--el-bg-color);
+    background: transparent;
   }
 
   .email-input :deep(.el-input__wrapper) {
     border-radius: 6px 0 0 6px;
-    background: var(--el-bg-color);
+    background: transparent;
   }
 
   .el-input {
@@ -658,6 +656,7 @@ function submitRegister() {
 
 :deep(.bind-dialog) {
   width: 400px !important;
+
   @media (max-width: 440px) {
     width: calc(100% - 40px) !important;
     margin-right: 20px !important;
@@ -728,7 +727,7 @@ function submitRegister() {
 
 
 #login-box {
-  background: linear-gradient(to bottom, #2980b9, #6dd5fa, #fff);
+  background: linear-gradient(135deg, #e8eedd, #deeedd, #bbffc9);
   font: 100% Arial, sans-serif;
   height: 100%;
   margin: 0;
@@ -812,4 +811,9 @@ function submitRegister() {
   top: -90px;
 }
 
+.liquid-bg {
+  width: 100%;
+  height: 100%;
+  position: relative
+}
 </style>

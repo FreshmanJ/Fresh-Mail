@@ -69,7 +69,7 @@
                     {{ $t('disabled') }}
                   </el-tag>
                   <span v-else-if="accountCount && hasPerm('account:add')" style="margin-right: 5px">{{
-                    $t('totalUserAccount', { msg: accountCount}) }}</span>
+                    $t('totalUserAccount', { msg: accountCount }) }}</span>
                   <el-tag v-else-if="!accountCount && hasPerm('account:add')">{{ $t('unlimited') }}</el-tag>
                   <el-tag v-else-if="!hasPerm('account:add')">{{ $t('unauthorized') }}</el-tag>
                 </div>
@@ -392,7 +392,7 @@ function formatName(email) {
     height: 34px;
     border-radius: 50%;
     color: #ffffff;
-    background: linear-gradient(135deg, #1890ff, #3a80dd);
+    background: linear-gradient(135deg, #258f10, #6ead66);
     transition: all 0.3s ease;
     display: flex;
     align-items: center;
