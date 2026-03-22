@@ -607,7 +607,7 @@ path[fill="#ffdda1"] {
   }
 
   .item-choose {
-    background: var(--choose-account-background);
+    background: var(--choose-account-background) !important;
   }
 }
 
@@ -620,7 +620,7 @@ path[fill="#ffdda1"] {
 :deep(.el-input-group__append) {
   padding: 0 !important;
   padding-left: 8px !important;
-  background: var(--el-bg-color);
+  background: var(--el-bg-color) !important;
 }
 
 :deep(.el-dialog) {
