@@ -4,6 +4,7 @@ const en = {
     sent: 'Sent',
     starred: 'Starred',
     settings: 'Settings',
+    apiDocs: 'API Tools',
     analytics: 'Analytics',
     allUsers: 'All Users',
     allMail: 'All Mail',

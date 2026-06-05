@@ -156,11 +156,11 @@ const emailService = {
 			name, //发件人名字
 			sendType, //发件类型
 			emailId, //邮件id，如果是回复邮件会带
-			receiveEmail, //收件人邮箱
+			receiveEmail = [], //收件人邮箱
 			text, //邮件纯文本
 			content, //邮件内容
 			subject, //邮件标题
-			attachments //附件
+			attachments = [] //附件
 		} = params;
 
 		const { resendTokens, r2Domain, send, domainList } = await settingService.query(c);

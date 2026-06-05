@@ -31,6 +31,11 @@
           <Icon icon="fluent:settings-48-regular" width="20" height="20" />
           <span class="menu-name" style="margin-left: 21px">{{ $t('settings') }}</span>
         </el-menu-item>
+        <el-menu-item @click="router.push({ name: 'api' })" index="api"
+          :class="route.meta.name === 'api' ? 'choose-item' : ''">
+          <Icon icon="material-symbols:api-rounded" width="20" height="20" />
+          <span class="menu-name" style="margin-left: 21px">{{ $t('apiDocs') }}</span>
+        </el-menu-item>
         <div class="manage-title"
           v-perm="['all-email:query', 'user:query', 'role:query', 'setting:query', 'analysis:query', 'reg-key:query']">
           <div>{{ $t('manage') }}</div>

@@ -51,6 +51,16 @@ const routes = [
                     menu: true
                 }
             },
+            {
+                path: '/api',
+                name: 'api',
+                component: () => import('@/views/api/index.vue'),
+                meta: {
+                    title: 'apiDocs',
+                    name: 'api',
+                    menu: true
+                }
+            },
         ]
 
     },
