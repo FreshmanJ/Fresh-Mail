@@ -34,6 +34,24 @@
 
 只需要一个域名，就可以创建多个不同的邮箱，类似各大邮箱平台，本项目支持署到 Cloudflare Workers ，降低服务器成本，搭建自己的邮箱服务
 
+## 此仓库的邮箱域名配置
+
+现用 Worker 为 `freshmail2`，网站入口为 `https://mail.freshman.de5.net`。邮箱域名在 `mail-worker/wrangler.toml` 的 `[vars].domain` 中维护：
+
+```toml
+[vars]
+domain = ["freshman.de5.net", "freshmanj.com"]
+```
+
+推送至 `main` 会触发已绑定的 Cloudflare Workers Builds 部署。GitHub Actions 部署时会合并仓库中的邮箱域名和 `DOMAIN` 环境配置，避免旧配置覆盖新增域名。原域名保留为默认选项。
+
+`mail-worker/` 和 `mail-vue/` 的 `pnpm-workspace.yaml` 声明了项目所需依赖的安装脚本权限，供新版 pnpm 安装和构建使用。
+
+每个收件域名需启用 Cloudflare Email Routing，并将 Catch-all 路由到 `freshmail2`。如果域名原先使用 Google 等邮件服务，需要先确认收件迁移，再替换根域名 MX；网站的 A/CNAME 记录无需修改。创建或添加对应邮箱后即可收件；如果角色限制了可用域名，还需在后台允许新域名。
+
+对外发件需在 Resend 单独添加并验证域名，将其提供的发件 DNS 记录添加到 Cloudflare，再在网站后台为该域名配置具有相应发件权限的 Resend Token。Resend 的收件功能应保持关闭，以便由 Cloudflare 处理收件。密钥只保存在后台配置中，不提交至仓库。
+
+
 ## 项目展示
 
 - [在线演示](https://skymail.ink)<br>

@@ -31,6 +31,24 @@
 
 ## Description
 With only one domain, you can create multiple different email addresses, similar to major email platforms. This project can be deployed on Cloudflare Workers to reduce server costs and build your own email service.
+## Mailbox domains for this repository
+
+The active Worker is `freshmail2`, and the website is `https://mail.freshman.de5.net`. Maintain mailbox domains in `[vars].domain` in `mail-worker/wrangler.toml`:
+
+```toml
+[vars]
+domain = ["freshman.de5.net", "freshmanj.com"]
+```
+
+Pushing to `main` triggers the connected Cloudflare Workers Builds deployment. GitHub Actions merges the repository domains with the `DOMAIN` environment configuration so an older configuration cannot remove a new domain. The original domain remains the default selection.
+
+The `pnpm-workspace.yaml` files in `mail-worker/` and `mail-vue/` declare the dependency installation scripts required to install and build with newer pnpm versions.
+
+Enable Cloudflare Email Routing for each receiving domain and route Catch-all to `freshmail2`. Confirm the receiving migration before replacing root MX records that point to Google or another provider; website A/CNAME records do not need changes. Create or add the corresponding mailbox to receive messages. Roles with domain restrictions must also allow the new domain in the administration panel.
+
+External sending requires adding and verifying each domain in Resend, adding its sending DNS records to Cloudflare, and configuring a Resend Token with permission to send from that domain in the website administration panel. Keep Resend receiving disabled so Cloudflare handles incoming mail. Store credentials only in the administration settings, never in the repository.
+
+
 ## Project Showcase
 
 - [Live Demo](https://skymail.ink)<br>
