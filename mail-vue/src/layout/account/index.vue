@@ -6,10 +6,10 @@
     </div>
     <el-scrollbar class="scrollbar" ref="scrollbarRef">
       <div v-infinite-scroll="getAccountList" :infinite-scroll-distance="600" :infinite-scroll-immediate="false">
-        <GlassSurface :width="'100 %'" :height="'auto'" :blur="1" :border-width="1"" class=" item el-card"
+        <div class="item"
           :class="itemBg(item.accountId)" v-for="(item, index) in accounts" :key="item.accountId"
           @click="changeAccount(item)">
-          <div class="account">
+          <div class="account" :title="item.email">
             {{ item.email }}
           </div>
           <div class="opt">
@@ -40,19 +40,19 @@
               </el-dropdown>
             </div>
           </div>
-        </GlassSurface>
+        </div>
 
         <!-- Initial Loading Skeleton -->
         <template v-if="loading">
           <el-skeleton v-for="i in skeletonRows" :key="i" animated>
             <template #template>
-              <el-card class="item">
-                <el-skeleton-item variant="p" style="width: 70%; height: 20px; margin-bottom: 25px" />
+              <div class="item item-skeleton">
+                <el-skeleton-item variant="p" style="width: 70%; height: 18px; margin-bottom: 6px" />
                 <div style="display: flex; justify-content: space-between">
                   <el-skeleton-item variant="text" style="width: 20px" />
                   <el-skeleton-item variant="text" style="width: 20px" />
                 </div>
-              </el-card>
+              </div>
             </template>
           </el-skeleton>
         </template>
@@ -61,13 +61,13 @@
         <template v-if="accounts.length > 0 && !noLoading">
           <el-skeleton animated>
             <template #template>
-              <el-card class="item">
-                <el-skeleton-item variant="p" style="width: 70%; height: 20px; margin-bottom: 20px" />
+              <div class="item item-skeleton">
+                <el-skeleton-item variant="p" style="width: 70%; height: 18px; margin-bottom: 6px" />
                 <div style="display: flex; justify-content: space-between">
                   <el-skeleton-item variant="text" style="width: 20px" />
                   <el-skeleton-item variant="text" style="width: 20px" />
                 </div>
-              </el-card>
+              </div>
             </template>
           </el-skeleton>
         </template>
@@ -135,7 +135,6 @@ import { useUserStore } from "@/store/user.js";
 import { hasPerm } from "@/perm/perm.js"
 import { useI18n } from "vue-i18n";
 import { AccountAllReceiveEnum } from "@/enums/account-enum.js";
-import GlassSurface from "../../component/GlassSurface/GlassSurface.vue";
 
 const { t } = useI18n();
 const userStore = useUserStore();
@@ -563,17 +562,21 @@ path[fill="#ffdda1"] {
   }
 
   .item {
-    // background-color: var(--el-bg-color);
-    border-radius: 8px;
-    padding: 22px 20px;
-    margin-bottom: 10px;
-    margin-left: 10px;
-    margin-right: 10px;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--el-border-color-lighter);
     cursor: pointer;
+    transition: background-color 150ms ease;
+
+    &:hover {
+      background-color: var(--el-fill-color-light);
+    }
 
     .account {
-      font-weight: 600;
-      margin-bottom: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 18px;
+      margin-bottom: 6px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -581,7 +584,9 @@ path[fill="#ffdda1"] {
 
     .opt {
       display: flex;
+      align-items: center;
       justify-content: space-between;
+      height: 22px;
       font-size: 12px;
       color: #888;
 
@@ -597,13 +602,10 @@ path[fill="#ffdda1"] {
       }
     }
 
-    :deep(.el-card__body) {
-      padding: 0;
-    }
   }
 
-  .item:first-child {
-    margin-top: 10px;
+  .item-skeleton {
+    cursor: default;
   }
 
   .item-choose {
